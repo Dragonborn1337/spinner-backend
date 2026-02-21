@@ -13,9 +13,20 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'initData required' });
         }
 
+        if (!process.env.BOT_TOKEN) {
+            console.error("BOT_TOKEN missing");
+            return res.status(500).json({ error: 'Server config error' });
+        }
+
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET missing");
+            return res.status(500).json({ error: 'Server config error' });
+        }
+
         const isValid = verifyTelegramInitData(initData, process.env.BOT_TOKEN);
 
         if (!isValid) {
+            console.log("Invalid Telegram signature");
             return res.status(401).json({ error: 'Invalid Telegram signature' });
         }
 
@@ -38,7 +49,7 @@ router.post('/', async (req, res) => {
             const newUser = await db.query(
                 `INSERT INTO users (telegram_id, username, avatar)
                  VALUES ($1, $2, $3)
-                 RETURNING *`,
+                     RETURNING *`,
                 [telegram_id, username || null, avatar || null]
             );
 
@@ -59,7 +70,7 @@ router.post('/', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Auth error:', error);
+        console.error('Auth crash:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });

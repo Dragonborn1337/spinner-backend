@@ -13,7 +13,6 @@ export function verifyTelegramInitData(initData, botToken) {
         .map(([key, value]) => `${key}=${value}`)
         .join('\n');
 
-    // 🔥 ПРАВИЛЬНЫЙ secret key по документации Telegram
     const secretKey = crypto
         .createHmac('sha256', 'WebAppData')
         .update(botToken)
