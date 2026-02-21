@@ -1,4 +1,5 @@
 import './db.js';
+import spinRouter from './routes/spin.js';
 
 import express from 'express';
 import cors from 'cors';
@@ -12,7 +13,6 @@ const app = express();
 app.use(cors({
     origin: '*'
 }));
-
 app.use(express.json());
 
 // health check
@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 // routes
 app.use('/api/auth', authRoutes);
 app.use('/api/spin', spinRoutes);
+app.use('/api/spin', spinRouter);
 
 // ⚠️ Render требует process.env.PORT
 const PORT = process.env.PORT || 3000;

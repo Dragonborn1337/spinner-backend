@@ -3,9 +3,8 @@ import { db } from '../db.js';
 
 const router = express.Router();
 
-const SPIN_COST = 10; // стоимость одного спина в stars
+const SPIN_COST = 10;
 
-// простая логика выпадения
 function generateReward() {
     const random = Math.random();
 
@@ -43,16 +42,15 @@ router.post('/', async (req, res) => {
 
         const reward = generateReward();
 
-        // списываем stars
         let newStarsBalance = user.stars_balance - SPIN_COST;
-        let newTonBalance = user.ton_balance;
+        let newTonBalance = Number(user.ton_balance);
 
         if (reward.type === 'stars') {
             newStarsBalance += reward.amount;
         }
 
         if (reward.type === 'ton') {
-            newTonBalance = Number(newTonBalance) + reward.amount;
+            newTonBalance += reward.amount;
         }
 
         await db.query(
