@@ -4,6 +4,8 @@ export function verifyTelegramInitData(initData, botToken) {
     const urlParams = new URLSearchParams(initData);
 
     const hash = urlParams.get('hash');
+    if (!hash) return false;
+
     urlParams.delete('hash');
 
     const dataCheckString = [...urlParams.entries()]
@@ -11,8 +13,9 @@ export function verifyTelegramInitData(initData, botToken) {
         .map(([key, value]) => `${key}=${value}`)
         .join('\n');
 
+    // 🔥 ПРАВИЛЬНЫЙ secret key по документации Telegram
     const secretKey = crypto
-        .createHash('sha256')
+        .createHmac('sha256', 'WebAppData')
         .update(botToken)
         .digest();
 
