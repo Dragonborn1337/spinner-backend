@@ -1,3 +1,4 @@
+<div style="color:red;">BUILD VERSION 3</div>
 import './db.js';
 
 import spinRoutes from './routes/spin.js';
