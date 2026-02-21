@@ -1,24 +1,32 @@
-<div style="color:red;">BUILD VERSION 3</div>
 import './db.js';
 
-import spinRoutes from './routes/spin.js';
 import express from 'express';
 import cors from 'cors';
 
+import spinRoutes from './routes/spin.js';
 import authRoutes from './routes/auth.js';
 
 const app = express();
 
-app.use('/api/spin', spinRoutes);
-app.use(cors());
+// ⚠️ middleware сначала
+app.use(cors({
+    origin: '*'
+}));
+
 app.use(express.json());
 
+// health check
 app.get('/', (req, res) => {
-    res.send('Server is running');
+    res.json({ status: 'Backend running' });
 });
 
+// routes
 app.use('/api/auth', authRoutes);
+app.use('/api/spin', spinRoutes);
 
-app.listen(3000, () => {
-    console.log('Backend running on :3000');
+// ⚠️ Render требует process.env.PORT
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Backend running on port ${PORT}`);
 });
